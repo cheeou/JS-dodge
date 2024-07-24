@@ -9,14 +9,14 @@
         body {
             margin: 0;
             overflow: hidden;
-            background-image: url('/img/sky_1.jpg');
+            background-image: url('img/sky_1.jpg');
             background-size: cover;
         }
 
         .target {
             width: 200px;
             height: 200px;
-            background-image: url('/img/runBuni-removebg-preview.png'); /* 여기에 이미지 경로를 입력하세요 */
+            background-image: url('img/runBuni-removebg-preview.png');
             background-size: cover;
             background-position: center;
             position: absolute;
@@ -65,7 +65,7 @@
             if (isGameOver) return;
 
             const lightning = document.createElement('img');
-            lightning.src = '/img/blueHeart.png'; 
+            lightning.src = 'img/blueHeart.png'; 
             lightning.classList.add('lightning');
             lightning.style.left = `${Math.random() * (window.innerWidth - 30)}px`;
             lightning.style.top = '-60px';
