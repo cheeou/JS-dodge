@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>번개 피하기 게임</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-image: url('/img/sky_1.jpg');
+            background-size: cover;
+        }
+
+        .target {
+            width: 200px;
+            height: 200px;
+            background-image: url('img/runBuni-removebg-preview.png'); /* 여기에 이미지 경로를 입력하세요 */
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .lightning {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="target"></div>
+    
+
+    <script>
+        const target = document.querySelector('.target');
+        let pos = window.innerWidth / 5; // window 창 넓이 나눠서 player 가운데 정렬
+        let isGameOver = false;
+
+        function move(event) {
+            if (isGameOver) return;
+
+            const keyName = event.key;
+            const targetPos = target.getBoundingClientRect();
+
+            if (keyName === 'ArrowRight' && targetPos.right + 10 < window.innerWidth) {
+                pos += 40;
+            }
+
+            if (keyName === 'ArrowLeft' && targetPos.left > 10) {
+                pos -= 40;
+            }
+
+            target.style.left = `${pos}px`;
+        }
+
+        document.addEventListener('keydown', move);
+
+        function createLightning() {
+            if (isGameOver) return;
+
+            const lightning = document.createElement('img');
+            lightning.src = '/img/blueHeart.png'; 
+            lightning.classList.add('lightning');
+            lightning.style.left = `${Math.random() * (window.innerWidth - 30)}px`;
+            lightning.style.top = '-60px';
+            document.body.appendChild(lightning);
+
+            const speed = Math.random() * 3 + 1; // 1-4 사이의 랜덤 속도
+
+            function fall() {
+                if (isGameOver) {
+                    lightning.remove();
+                    return;
+                }
+
+                const currentTop = parseFloat(lightning.style.top);
+                if (currentTop > window.innerHeight) {
+                    lightning.remove();
+                } else {
+                    lightning.style.top = `${currentTop + speed}px`;
+                    requestAnimationFrame(fall);
+
+                    // 충돌 감지
+                    const targetPos = target.getBoundingClientRect();
+                    const lightningPos = lightning.getBoundingClientRect();
+                    if (
+                        targetPos.left < lightningPos.right &&
+                        targetPos.right > lightningPos.left &&
+                        targetPos.top < lightningPos.bottom &&
+                        targetPos.bottom > lightningPos.top
+                    ) {
+                        gameOver();
+                    }
+                }
+            }
+
+            fall();
+        }
+
+        function gameOver() {
+            isGameOver = true;
+            alert('게임 오버!');
+            if (confirm('다시 시작하시겠습니까?')) {
+                location.reload();
+            }
+        }
+
+        setInterval(createLightning, 1000); // 1초마다 새 번개 생성
+    </script>
+</body>
+
+</html>
